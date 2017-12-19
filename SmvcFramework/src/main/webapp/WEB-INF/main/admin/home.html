@@ -57,10 +57,10 @@
 					<ul class="nav navbar-nav navbar-right navbar-toolmenu" style="margin-top: 29px;">
 						<li class="dropdown"><a role="button" data-toggle="dropdown" data-target="#"><i class="icon-leaf"></i> &nbsp;换肤<span class="caret"></span></a>
 							<ul id="sys-theme" class="dropdown-menu" role="menu">
-								<li><a href="#" data-theme="dark">亮黑色(默认推荐)</a></li>
+								<li><a href="javascript:Home.changeTheme('zui-theme-black.css')" data-theme="dark">亮黑色(默认推荐)</a></li>
 								<li><a href="#" data-theme="black">深灰色1</a></li>
 								<li><a href="#" data-theme="bluegrey">蓝灰色</a></li>
-								<li><a href="#" data-theme="brown">棕色</a></li>
+								<li><a href="javascript:Home.changeTheme('zui-theme-purple.css')" data-theme="brown">紫色</a></li>
 							</ul></li>
 						<li><a href="#"><i class="icon-bell"></i> <code>0</code></a></li>
 						<li class="dropdown"><a href="#" lass="dropdown-toggle" data-toggle="dropdown"><i class="icon-user"></i><span> ${uName!''}</span><b
@@ -98,9 +98,7 @@
 		</div>
 	</div>
 
-	<script src="${basePath}/app/zui/js/require.js"></script>
-	<script src="${basePath}/app/zui/js/config.js"></script>
-	<script src="${basePath}/app/zui/js/assets/page/common.js"></script>
-	<script src="${basePath}/app/main/admin/home/menu.js"></script>
+<!-- 	<script src="${basePath}/app/main/admin/home/menu.js"></script> -->
+	<script src="${basePath}/app/main/admin/home.js"></script>
 </body>
 </html>
