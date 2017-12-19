@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
 	<display-name>SmvcFramework</display-name>
-	
+
 	<context-param>
 		<param-name>smvcFrameworkKey</param-name>
 		<param-value>SmvcFramework.root</param-value>
 	</context-param>
-	
+
 	<!-- 加载Spring XML配置文件 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -27,11 +30,11 @@
 		<param-name>log4jRefreshInterval</param-name>
 		<param-value>60000</param-value>
 	</context-param>
-	
-	
-	
-	
-	<!-- springMVC XML配置-->
+
+
+
+
+	<!-- springMVC XML配置 -->
 	<servlet>
 		<servlet-name>springMVC</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -45,11 +48,11 @@
 		<servlet-name>springMVC</servlet-name>
 		<url-pattern>*.wmctl</url-pattern>
 	</servlet-mapping>
-	
-	
-	
-	
-	<!--监听器配置(start)-->
+
+
+
+
+	<!--监听器配置(start) -->
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
@@ -58,19 +61,19 @@
 		<description>session监听器</description>
 		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
 	</listener>
-  
+
 	<listener>
 		<description>spring监听器</description>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
-	<!-- Spring刷新Interceptor防止内存泄漏-->
+
+	<!-- Spring刷新Interceptor防止内存泄漏 -->
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
-	
-	
-	
+
+
+
 	<!--过滤器配置(start) -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -80,8 +83,8 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-  
-  
+
+
 	<filter>
 		<description>字符集过滤器</description>
 		<filter-name>encodingFilter</filter-name>
@@ -99,22 +102,22 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
-	
+
 	<session-config>
 		<session-timeout>15</session-timeout>
 	</session-config>

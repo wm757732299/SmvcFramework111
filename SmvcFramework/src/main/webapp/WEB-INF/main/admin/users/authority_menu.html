@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <#include "../common/head_resources.html">
-<title>Insert title here</title>
 
 <link rel="stylesheet" href="${basePath}/app/plugin/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
 <!-- <link rel="stylesheet" href="${basePath}/app/plugin/ztree/css/metroStyle/metroStyle.css" type="text/css"> -->
@@ -13,7 +12,6 @@ html, body {
 	height: 99%;
 	-webkit-height: 100%;
 }
-
 
 .div_0 {
 	width: 99%;
@@ -39,26 +37,34 @@ html, body {
 	border: 1px rgba(56, 52, 52, 0.02) solid;
 }
 
-#datatable-childNodeTable > .datatable-head{
-display:none;
+#datatable-childNodeTable>.datatable-head {
+	display: none;
 }
-
 </style>
 </head>
 <body>
 
-	<input type="hidden" id ="roleId" name ="roleId"  value="${data!''}" readonly="readonly" placeholder="角色id">
-  
+	<input type="hidden" id="roleId" name="roleId" value="${data!''}" readonly="readonly" placeholder="角色id">
+
 	<div class="divv div_0">
-		<button class="btn btn-primary " type="button" onclick="AuthorityMenu.saveRoleMenu()"><i class="icon icon-star"></i>保存权限</button>
-		<button class="btn btn-warning " type="button" onclick="AuthorityMenu.reFresh()"><i class="icon icon-star"></i>刷新导航树</button>
-		<button class="btn btn-info " type="button" onclick="AuthorityMenu.expandAll(true)"><i class="icon icon-star"></i>展开</button>
-		<button class="btn btn-info " type="button" onclick="AuthorityMenu.expandAll(false)"><i class="icon icon-star"></i>折叠</button>
+		<button class="btn btn-primary " type="button" onclick="AuthorityMenu.saveRoleMenu()">
+			<i class="icon icon-star"></i>保存权限
+		</button>
+		<button class="btn btn-warning " type="button" onclick="AuthorityMenu.reFresh()">
+			<i class="icon icon-star"></i>刷新导航树
+		</button>
+		<button class="btn btn-info " type="button" onclick="AuthorityMenu.expandAll(true)">
+			<i class="icon icon-star"></i>展开
+		</button>
+		<button class="btn btn-info " type="button" onclick="AuthorityMenu.expandAll(false)">
+			<i class="icon icon-star"></i>折叠
+		</button>
 		<div class="input-group" style="width: 20%">
-		  	<input type="text" id="searchNodes" class="form-control">
-		  	<span class="input-group-btn">
-			<button class="btn btn-success " type="button" onclick="AuthorityMenu.searchNodes()"><i class="icon icon-star"></i>查找节点</button>
-		  	</span>
+			<input type="text" id="searchNodes" class="form-control"> <span class="input-group-btn">
+				<button class="btn btn-success " type="button" onclick="AuthorityMenu.searchNodes()">
+					<i class="icon icon-star"></i>查找节点
+				</button>
+			</span>
 		</div>
 	</div>
 
@@ -72,7 +78,6 @@ display:none;
 	<div class="div_1_1 panel panel-info">
 		<div class="panel-heading">详情</div>
 		<div class="panel-body">
-			
 			<table id="parentNodeTable" class="table  ">
 				<thead>
 					<tr>
@@ -86,20 +91,18 @@ display:none;
 			</table>
 
 			<table id="childNodeTable" class="table table-bordered">
-			
+
 			</table>
 
 		</div>
 		<div class="panel-footer"></div>
-		
 	</div>
-	
- 
-	
+
+
 	<script src="${basePath}/app/plugin/myutils/data_model.js"></script>
-		<script src="${basePath}/app/plugin/myutils/dialog.js"></script>
-<script src="${basePath}/app/plugin/ztree/js/jquery.ztree.all.js"></script>
+	<script src="${basePath}/app/plugin/myutils/dialog.js"></script>
+	<script src="${basePath}/app/plugin/ztree/js/jquery.ztree.all.js"></script>
 	<script src="${basePath}/app/main/admin/users/authority_menu.js"></script>
-		<script src="${basePath}/app/main/admin/menu/menu_add.js"></script>
+	<script src="${basePath}/app/main/admin/menu/menu_add.js"></script>
 </body>
 </html>
