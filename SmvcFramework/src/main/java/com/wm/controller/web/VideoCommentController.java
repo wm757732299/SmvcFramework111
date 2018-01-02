@@ -55,6 +55,7 @@ public class VideoCommentController extends BaseController<VideoComment> {
 
 				vc.setReplyUid(getLoginUserId());
 				vc.setReplyGroup(vc.getId());
+			//	vc.setReplyedId(vc.getId());
 				vc.setLikeCount(0);
 				vc.setDislikeCount(0);
 				vc.setCreateTime(new Date());
@@ -94,10 +95,10 @@ public class VideoCommentController extends BaseController<VideoComment> {
 		param.put("vcType", "HF");
 		param.put("curPage", 1);
 		param.put("pageSize", 10);
-//		for (VideoComment videoComment : vcs) {
-//			param.put("replyGroup", videoComment.getId());
-//			videoComment.setReplyList(videoCommentService.queryByPage(param));
-//		}
+		for (VideoComment videoComment : vcs) {
+			param.put("replyGroup", videoComment.getId());
+			videoComment.setReplyList(videoCommentService.queryByPage(param));
+		}
 		try {
 			result.put("success", "true");
 			result.put("msg", "请求成功");

@@ -11,20 +11,21 @@
 		<result property="replyUid" column="REPLY_UID" />	
 		<result property="content" column="CONTENT" />	
 		<result property="replyGroup" column="REPLY_GROUP" />	
+		<result property="replyedId" column="REPLYED_ID" />	
 		<result property="vcType" column="VC_TYPE" />	
 		<result property="likeCount" column="LIKE_COUNT" />	
 		<result property="dislikeCount" column="DISLIKE_COUNT" />	
 		<result property="createTime" column="CREATE_TIME" />	
 		<result property="timeStamp" column="TIME_STAMP" />	
-		<result property="deleteMark" column="DELETE_MARK" />	
+		<result property="deleteMark" column="DELETE_MARK" />
 	</resultMap>
 
 
 	<sql id="Table_Fields">
-		 ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK
+		 ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK
 	</sql>
 
-    <sql id="Where_Conditions">
+     <sql id="Where_Conditions">
 		<where>
 			1=1
 			<if test="id != null"> 
@@ -44,6 +45,9 @@
 			</if>	
 			<if test="replyGroup != null"> 
 				AND REPLY_GROUP = #{replyGroup} 
+			</if>	
+			<if test="replyedId != null"> 
+				AND REPLYED_ID = #{replyedId} 
 			</if>	
 			<if test="vcType != null"> 
 				AND VC_TYPE = #{vcType} 
@@ -86,6 +90,9 @@
 			<if test="replyGroup != null"> 
 				REPLY_GROUP = #{replyGroup}, 
 			</if>	
+			<if test="replyedId != null"> 
+				REPLYED_ID = #{replyedId}, 
+			</if>	
 			<if test="vcType != null"> 
 				VC_TYPE = #{vcType}, 
 			</if>	
@@ -110,9 +117,9 @@
 	<insert id="insert" parameterType="com.wm.mapper.entity.VideoComment" >
 			<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">select uuid()</selectKey>
 			INSERT INTO VIDEO_COMMENT
-			  (ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK)
+			  (ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK)
 			VALUES 
-			  (#{id},#{topicId},#{fromUid},#{replyUid},#{content},#{replyGroup},#{vcType},#{likeCount},#{dislikeCount},#{createTime},#{timeStamp},#{deleteMark})
+			  (#{id},#{topicId},#{fromUid},#{replyUid},#{content},#{replyGroup},#{replyedId},#{vcType},#{likeCount},#{dislikeCount},#{createTime},#{timeStamp},#{deleteMark})
 	</insert>
 	
 	<delete id="deleteTrueByKey" parameterType="java.lang.String" >

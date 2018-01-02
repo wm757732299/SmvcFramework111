@@ -151,9 +151,15 @@ footer {
 	margin-bottom: 1px;
 }
 .ueditor-reply-btn{
-	position: absolute;
+    position: absolute;
     z-index: 1111;
     margin-left: 151px;
+    border: 0px;
+    border-radius: 3px;
+    color: #0e0e0e;
+    /* text-shadow: 0 -1px 0 rgba(0, 0, 0, .2); */
+    background-color: rgba(170, 178, 180, 0.11);
+    /* border-color: #a74242; */
 }
 .comment > .comments-list {
       padding-top: 0px;  

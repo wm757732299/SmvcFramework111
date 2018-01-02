@@ -17,6 +17,7 @@ public class VideoComment implements Serializable {
 	private String replyUid;
 	private String content;
 	private String replyGroup;
+	private String replyedId;
 	private String vcType;
 	private Integer likeCount;
 	private Integer dislikeCount;
@@ -76,6 +77,14 @@ public class VideoComment implements Serializable {
 
 	public void setReplyGroup(String replyGroup) {
 		this.replyGroup = replyGroup;
+	}
+
+	public String getReplyedId() {
+		return replyedId;
+	}
+
+	public void setReplyedId(String replyedId) {
+		this.replyedId = replyedId;
 	}
 
 	public String getVcType() {

@@ -9,11 +9,16 @@ $(document)
 					$("div").on("click", ".comt-reply", function(e) {
 						if (this === e.target) {
 							var cId = $(this).data("cid");
+							var rId = $(this).data("rid");
 							$(this).removeClass("comt-reply");
 							$(this).addClass("comt-cancel-reply");
 							$(this).text("取消回复");
-							console.log($(this).text());
-							reply(cId);
+							var afalg=$(this);
+							if(rId){
+								reply(rId,cId,afalg);
+							}else{
+								reply(cId,null,afalg);
+							}
 
 						}
 						// 阻止事件冒泡到父元素
@@ -22,10 +27,17 @@ $(document)
 					$("div").on("click", ".comt-cancel-reply", function(e) {
 						if (this === e.target) {
 							var cId = $(this).data("cid");
+							var rId = $(this).data("rid");
 							$(this).removeClass("comt-cancel-reply");
 							$(this).addClass("comt-reply");
 							$(this).text("回复");
-							cancelReply(cId);
+							var afalg=$(this);
+							if(rId){
+								cancelReply(rId,afalg);
+							}else{
+								cancelReply(cId,afalg);
+							}
+							
 						}
 						// 阻止事件冒泡到父元素
 						e.stopPropagation();
@@ -261,13 +273,6 @@ function comtHtml(c) {
 				+ '	<a class="comt-reply" data-cid='
 				+ cid
 				+ ' href="javascript:;">回复</a>'
-				// + ' <a href="javascript:cancelReply(\''
-				// + cid
-				// + '\')">取消回复</a>'
-				// + ' <button class="btn btn-mini " type="button"
-				// onclick="submitReply(\''
-				// + cid
-				// + '\')">发表评论</button>'
 				+ '<div class="pull-right text-muted"><a class="reply-list-btn" href="javascript:;"><i class="icon icon-comment-alt" data-cid='
 				+ cid
 				+ '>评论</i></a><a class="thumbs-up-btn" href="javascript:;"><i class="icon icon-thumbs-o-up" data-cid='
@@ -288,7 +293,7 @@ function comtHtml(c) {
 	}
 	return html;
 }
-function replyHtml(r) {
+function replyHtml(r,cId) {
 	var html = '';
 	if (r) {
 		html += '<div class="comment reply">'
@@ -304,8 +309,21 @@ function replyHtml(r) {
 				+ '<div>'
 				+ '<a href="###"><strong>华师大第一美女</strong></a> <span class="text-muted">回复</span> <a href="###">张士超</a>'
 				+ '</div>' + '<div class="text">' + r.content + '</div>'
-				+ '<div class="actions">' + '<a href="##">回复</a>' + '</div>'
-				+ '	</div>' + '	</div>';
+				+ '<div class="actions">' 
+				+ '	<a class="comt-reply" data-rid='
+				+ r.id
+				+' data-cid='
+				+ cId
+				+ ' href="javascript:;">回复</a>'
+				+ '</div>'
+				+ '	</div>' 
+				
+				+ '<div id="'
+				+ r.id
+				+ '_div'
+				+ '"></div>'
+				
+				+ '	</div>';
 	}
 
 	return html;
@@ -322,7 +340,7 @@ function buildComtModel(data) {
 			if (replys && replys.length > 0) {
 				for (var i = 0; i < replys.length; i++) {
 					var re = replys[i];
-					replyList += replyHtml(re);
+					replyList += replyHtml(re,c.id);
 				}
 			}
 			replyList += '</div>';
@@ -349,7 +367,6 @@ function comment() {
 	// });
 
 	var content = editor.getContent();
-	console.log(content);
 	var data = {
 		topicId : "voidID1111111",
 		fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",
@@ -379,39 +396,70 @@ function comment() {
 
 }
 
-function reply(cId) {
+function reply(cId, comtId, afalg) {
 	var ume = cId + "_editor";
-
-	var edi = '<div> <input class="ueditor-reply-btn" type="button" value="发表评论" onclick="submitReply(\''
-			+ cId
-			+ '\')" style="height:24px;line-height:20px"/><script type="text/plain" id="'
-			+ ume + '" style="width: 100%; height: 60px;"></script></div>';
+	var edi = '<div><script type="text/plain" id="' + ume
+			+ '" style="width: 100%; height: 60px;"></script></div>';
 	$("#" + cId + '_div').append(edi);
-	UE.getEditor(ume, {
+
+	UE.registerUI('确认回复', function(editor, uiName) {
+				var btn = new UE.ui.Button({
+					name : uiName,
+					title : uiName,
+					cssRules : 'background-position: -480px -20px;',
+					onclick : function() {
+						submitReply(cId,comtId,afalg);
+						 cancelReply(cId,afalg);
+					}
+				});
+
+				editor.addListener('selectionchange', function() {
+					var state = editor.queryCommandState(uiName);
+					if (state == -1) {
+						btn.setDisabled(true);
+						btn.setChecked(false);
+					} else {
+						btn.setDisabled(false);
+						btn.setChecked(state);
+					}
+				});
+
+				return btn;
+			}/*
+				 * index 指定添加到工具栏上的那个位置，默认时追加到最后,editorId
+				 * 指定这个UI是那个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮
+				 */);
+
+	var editor = UE.getEditor(ume, {
 		toolbars : [ [ 'removeformat', 'selectall', 'cleardoc', 'emotion'
-//				,'fullscreen' 
-				] ],
+		// ,'fullscreen'
+		] ],
 		wordCount : false
 	});
 }
-function cancelReply(cId) {
+function cancelReply(cId,afalg) {
+	afalg.removeClass("comt-cancel-reply");
+	afalg.addClass("comt-reply");
+	afalg.text("回复");
+	
 	var ume = cId + "_editor";
 	UE.getEditor(ume).destroy();
-	$("#" + ume).remove();
+	$("#" + cId+"_div").empty();
 }
-function submitReply(cId) {
+function submitReply(cId,comtId) {
 	var ume = cId + "_editor";
 	var content = UE.getEditor(ume).getContent();
-	console.log(content);
-	var data = {
-		id : cId,
-		topicId : "voidID1111111",
-		fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",
-		replyUid : "11ea8ae5-c44c-11e7-a1be-d017c298b1bf",
-		content : content,
-		replyGroup : cId,
-		vcType : "HF"
-	}
+	var data  = {
+					id : comtId?comtId:cId,
+					topicId : "voidID1111111",
+					fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",
+					replyUid : "11ea8ae5-c44c-11e7-a1be-d017c298b1bf",
+					content : content,
+					replyGroup : comtId?comtId:cId,
+					replyedId : cId,
+					vcType : "HF"
+				};
+
 	$.ajax({
 		type : 'post',
 		url : basePath + "/videoComment/save_comt.wmctl",
@@ -420,17 +468,20 @@ function submitReply(cId) {
 		success : function(result) {
 			if (result.success == "true") {
 				var re = result.data;
-				var rep = cId + '_reply_list';
-				var repHtml = replyHtml(re);
+				var rep =  (comtId?comtId:cId) + '_reply_list';
+				var repHtml = replyHtml(re,comtId?comtId:cId);
 				$("#" + rep).prepend(repHtml);
-				cancelReply(cId);
+//				if(comtId){
+//					cancelReply(cId);
+//				}
 			} else {
 				alert("请登录");
+				return false;
 			}
 		}
 	});
 }
-
+ 
 // 点赞
 function thumbsUp(cId) {
 	$.ajax({
