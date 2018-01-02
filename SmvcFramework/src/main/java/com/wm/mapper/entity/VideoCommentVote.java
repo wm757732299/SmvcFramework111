@@ -8,7 +8,7 @@ public class VideoCommentVote implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3484676885569804089L;
+	private static final long serialVersionUID = 4620958540115088369L;
 
 	private String id;
 	private String topicId;
