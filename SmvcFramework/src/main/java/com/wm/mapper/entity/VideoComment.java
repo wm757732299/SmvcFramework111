@@ -21,6 +21,10 @@ public class VideoComment implements Serializable {
 	private String vcType;
 	private Integer likeCount;
 	private Integer dislikeCount;
+	private String comtUname;
+	private String comtUpic;
+	private String repliedUname;
+	private String repliedUpic;
 	private Date createTime;
 	private Date timeStamp;
 	private int deleteMark;
@@ -109,6 +113,38 @@ public class VideoComment implements Serializable {
 
 	public void setDislikeCount(Integer dislikeCount) {
 		this.dislikeCount = dislikeCount;
+	}
+
+	public String getComtUname() {
+		return comtUname;
+	}
+
+	public void setComtUname(String comtUname) {
+		this.comtUname = comtUname;
+	}
+
+	public String getComtUpic() {
+		return comtUpic;
+	}
+
+	public void setComtUpic(String comtUpic) {
+		this.comtUpic = comtUpic;
+	}
+
+	public String getRepliedUname() {
+		return repliedUname;
+	}
+
+	public void setRepliedUname(String repliedUname) {
+		this.repliedUname = repliedUname;
+	}
+
+	public String getRepliedUpic() {
+		return repliedUpic;
+	}
+
+	public void setRepliedUpic(String repliedUpic) {
+		this.repliedUpic = repliedUpic;
 	}
 
 	public Date getCreateTime() {

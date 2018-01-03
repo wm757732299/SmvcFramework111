@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wm.controller.base.BaseController;
 import com.wm.mapper.entity.VideoComment;
 import com.wm.mapper.entity.VideoCommentVote;
+import com.wm.model.LoginUserDetails;
 import com.wm.service.VideoCommentService;
 import com.wm.service.VideoCommentVoteService;
+import com.wm.util.CommentVoteQueue;
 
 @Controller
 @RequestMapping(value = "/videoComment")
@@ -41,9 +43,16 @@ public class VideoCommentController extends BaseController<VideoComment> {
 		Map<String, Object> result = new HashMap<String, Object>();
 		// 评论时切换帐号问题
 		try {
+			
+			LoginUserDetails loginer = getLoginUser();
+			
 			if ("PL".equals(vc.getVcType())) {// HF:回复,PL评论
 
-				vc.setFromUid(getLoginUserId());
+				//冗余评论人信息
+				vc.setComtUname(loginer.getuName());
+				vc.setComtUpic(loginer.getuPhoto());
+				
+				vc.setFromUid(loginer.getId());
 				// vc.setReplyGroup(vc.getTopicId()+getLoginUserId());
 				vc.setLikeCount(0);
 				vc.setDislikeCount(0);
@@ -52,10 +61,12 @@ public class VideoCommentController extends BaseController<VideoComment> {
 				videoCommentService.insert(vc);
 			}
 			if ("HF".equals(vc.getVcType())) {
-
-				vc.setReplyUid(getLoginUserId());
-				vc.setReplyGroup(vc.getId());
-			//	vc.setReplyedId(vc.getId());
+				
+				//冗余回复人信息
+				vc.setComtUname(loginer.getuName());
+				vc.setComtUpic(loginer.getuPhoto());
+				
+				vc.setReplyUid(loginer.getId());
 				vc.setLikeCount(0);
 				vc.setDislikeCount(0);
 				vc.setCreateTime(new Date());
@@ -111,6 +122,12 @@ public class VideoCommentController extends BaseController<VideoComment> {
 		return result;
 	}
 
+	/**
+	 * 点赞点踩或取消
+	 * @param response
+	 * @param request
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/vote", method = { RequestMethod.POST,
 			RequestMethod.GET })
@@ -135,6 +152,9 @@ public class VideoCommentController extends BaseController<VideoComment> {
 				vcv.setVote(0);
 				videoCommentVoteService.cancelVote(vcv);
 			}
+			
+			CommentVoteQueue.instance().getQueue().offer(cId);
+			
 			result.put("success", "true");
 			result.put("msg", "请求成功");
 			result.put("data", "");

@@ -12,7 +12,9 @@ import com.github.pagehelper.PageHelper;
 import com.wm.annotation.DataSourceChoose;
 import com.wm.annotation.DataSourceChoose.SourceKey;
 import com.wm.mapper.VideoCommentMapper;
+import com.wm.mapper.VideoCommentVoteMapper;
 import com.wm.mapper.entity.VideoComment;
+import com.wm.mapper.entity.VideoCommentVote;
 import com.wm.service.VideoCommentService;
 
 @Service("videoCommentService")
@@ -22,6 +24,8 @@ public class VideoCommentServiceImpl implements VideoCommentService {
 
 	@Resource(type = VideoCommentMapper.class)
 	private VideoCommentMapper videoCommentMapper;
+	@Resource(type = VideoCommentVoteMapper.class)
+	private VideoCommentVoteMapper videoCommentVoteMapper;
 
 	public long insert(VideoComment t) {
 		return videoCommentMapper.insert(t);
@@ -48,7 +52,22 @@ public class VideoCommentServiceImpl implements VideoCommentService {
 	}
 
 	public List<VideoComment> queryByPage(Map<String, Object> param) {
-		PageHelper.startPage((Integer)param.get("curPage"), (Integer)param.get("pageSize"));
-		return  videoCommentMapper.queryByPage(param);
+		PageHelper.startPage((Integer) param.get("curPage"),
+				(Integer) param.get("pageSize"));
+		return videoCommentMapper.queryByPage(param);
+	}
+
+	public void syncVotes(String id) {
+		VideoCommentVote vcv = new VideoCommentVote();
+		vcv.setTopicId(id);
+		vcv.setVote(1);
+		long like = videoCommentVoteMapper.queryCount(vcv);
+		vcv.setVote(-1);
+		long disLike = videoCommentVoteMapper.queryCount(vcv);
+		VideoComment vc = new VideoComment();
+		vc.setId(id);
+		vc.setLikeCount((int) like);
+		vc.setDislikeCount((int) disLike);
+		videoCommentMapper.update(vc);
 	}
 }

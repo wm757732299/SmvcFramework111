@@ -15,17 +15,21 @@
 		<result property="vcType" column="VC_TYPE" />	
 		<result property="likeCount" column="LIKE_COUNT" />	
 		<result property="dislikeCount" column="DISLIKE_COUNT" />	
+		<result property="comtUname" column="COMT_UNAME" />	
+		<result property="comtUpic" column="COMT_UPIC" />	
+		<result property="repliedUname" column="REPLIED_UNAME" />	
+		<result property="repliedUpic" column="REPLIED_UPIC" />	
 		<result property="createTime" column="CREATE_TIME" />	
 		<result property="timeStamp" column="TIME_STAMP" />	
-		<result property="deleteMark" column="DELETE_MARK" />
+		<result property="deleteMark" column="DELETE_MARK" />	
 	</resultMap>
 
 
 	<sql id="Table_Fields">
-		 ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK
+		 ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,COMT_UNAME,COMT_UPIC,REPLIED_UNAME,REPLIED_UPIC,CREATE_TIME,TIME_STAMP,DELETE_MARK
 	</sql>
 
-     <sql id="Where_Conditions">
+    <sql id="Where_Conditions">
 		<where>
 			1=1
 			<if test="id != null"> 
@@ -57,6 +61,18 @@
 			</if>	
 			<if test="dislikeCount != null"> 
 				AND DISLIKE_COUNT = #{dislikeCount} 
+			</if>	
+			<if test="comtUname != null"> 
+				AND COMT_UNAME = #{comtUname} 
+			</if>	
+			<if test="comtUpic != null"> 
+				AND COMT_UPIC = #{comtUpic} 
+			</if>	
+			<if test="repliedUname != null"> 
+				AND REPLIED_UNAME = #{repliedUname} 
+			</if>	
+			<if test="repliedUpic != null"> 
+				AND REPLIED_UPIC = #{repliedUpic} 
 			</if>	
 			<if test="createTime != null"> 
 				AND CREATE_TIME = #{createTime} 
@@ -102,6 +118,18 @@
 			<if test="dislikeCount != null"> 
 				DISLIKE_COUNT = #{dislikeCount}, 
 			</if>	
+			<if test="comtUname != null"> 
+				COMT_UNAME = #{comtUname}, 
+			</if>	
+			<if test="comtUpic != null"> 
+				COMT_UPIC = #{comtUpic}, 
+			</if>	
+			<if test="repliedUname != null"> 
+				REPLIED_UNAME = #{repliedUname}, 
+			</if>	
+			<if test="repliedUpic != null"> 
+				REPLIED_UPIC = #{repliedUpic}, 
+			</if>	
 			<if test="createTime != null"> 
 				CREATE_TIME = #{createTime}, 
 			</if>	
@@ -117,9 +145,9 @@
 	<insert id="insert" parameterType="com.wm.mapper.entity.VideoComment" >
 			<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">select uuid()</selectKey>
 			INSERT INTO VIDEO_COMMENT
-			  (ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,CREATE_TIME,TIME_STAMP,DELETE_MARK)
+			  (ID,TOPIC_ID,FROM_UID,REPLY_UID,CONTENT,REPLY_GROUP,REPLYED_ID,VC_TYPE,LIKE_COUNT,DISLIKE_COUNT,COMT_UNAME,COMT_UPIC,REPLIED_UNAME,REPLIED_UPIC,CREATE_TIME,TIME_STAMP,DELETE_MARK)
 			VALUES 
-			  (#{id},#{topicId},#{fromUid},#{replyUid},#{content},#{replyGroup},#{replyedId},#{vcType},#{likeCount},#{dislikeCount},#{createTime},#{timeStamp},#{deleteMark})
+			  (#{id},#{topicId},#{fromUid},#{replyUid},#{content},#{replyGroup},#{replyedId},#{vcType},#{likeCount},#{dislikeCount},#{comtUname},#{comtUpic},#{repliedUname},#{repliedUpic},#{createTime},#{timeStamp},#{deleteMark})
 	</insert>
 	
 	<delete id="deleteTrueByKey" parameterType="java.lang.String" >

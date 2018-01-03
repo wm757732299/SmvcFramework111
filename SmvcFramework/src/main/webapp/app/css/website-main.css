@@ -92,13 +92,17 @@ body {
 .text-gray a:hover, .text-muted a:hover, .text-gray a:link , .text-muted a:link  {
     text-decoration-line: none;
 }
+
 .text-gray a:hover, .text-muted a:hover, .text-gray a:active, .text-muted a:active {
     color: #145ccd;
     text-decoration-line: none;
 }
-/* .thumbs-down-btn{ */
-/* 	font-size: 9px; */
-/* 	padding-right: 8px; */
+.text-muted .thumbs-btn-disable{
+	    color: #ccc;
+}
+/* .thumbs-btn-disable a:hover{ */
+/*     color: #ffff00; */
+/*     text-decoration-line: none; */
 /* } */
 
 
@@ -109,6 +113,10 @@ body {
 	color: #fff;
 	background-color: #47515f;
 	border-color: #47515f;
+	margin-bottom:0px;
+}
+.alert{
+border-radius:0px;	
 }
 
 figure>img {

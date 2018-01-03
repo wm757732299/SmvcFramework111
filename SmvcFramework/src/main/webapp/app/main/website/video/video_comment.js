@@ -2,10 +2,10 @@
  * 
  */
 'use strict';
-$(document)
-		.ready(
-				function() {
+$(document).ready(function() {
 
+	getComt();
+	
 					$("div").on("click", ".comt-reply", function(e) {
 						if (this === e.target) {
 							var cId = $(this).data("cid");
@@ -13,11 +13,11 @@ $(document)
 							$(this).removeClass("comt-reply");
 							$(this).addClass("comt-cancel-reply");
 							$(this).text("取消回复");
-							var afalg=$(this);
-							if(rId){
-								reply(rId,cId,afalg);
-							}else{
-								reply(cId,null,afalg);
+							var afalg = $(this);
+							if (rId) {
+								reply(rId, cId, afalg);//回复的回复
+							} else {
+								reply(cId, null, afalg);//评论的回复
 							}
 
 						}
@@ -31,13 +31,13 @@ $(document)
 							$(this).removeClass("comt-cancel-reply");
 							$(this).addClass("comt-reply");
 							$(this).text("回复");
-							var afalg=$(this);
-							if(rId){
-								cancelReply(rId,afalg);
-							}else{
-								cancelReply(cId,afalg);
+							var afalg = $(this);
+							if (rId) {
+								cancelReply(rId, afalg);
+							} else {
+								cancelReply(cId, afalg);
 							}
-							
+
 						}
 						// 阻止事件冒泡到父元素
 						e.stopPropagation();
@@ -55,72 +55,15 @@ $(document)
 						e.stopPropagation();
 					});
 
-					$("div")
-							.on(
-									"click",
-									".icon-thumbs-o-down",
-									function(e) {
+					$("div").on("click",".thumbs-up-btn .icon-thumbs-o-up",function(e) {
 										if (this === e.target) {
 											var cId = $(this).data("cid");
-											var f = cacheData(
-													cId,
-													"video_comt_thumbs_down_localstorage",
-													true);
-
-											$(this).removeClass(
-													"icon-thumbs-o-down");
-											$(this)
-													.addClass(
-															"icon-thumbs-down");
-											if (f) {
-												var span = $(this.children[0]);
-												var voteNum = span.text();
-												voteNum = Number(voteNum) + 1;
-												span.text(voteNum);
-												thumbsDown(cId);
-											}
-
-										}
-										// 阻止事件冒泡到父元素
-										e.stopPropagation();
-									});
-
-					$("div")
-							.on(
-									"click",
-									".icon-thumbs-down",
-									function(e) {
-										if (this === e.target) {
-											var cId = $(this).data("cid");
-											var f = cacheData(
-													cId,
-													"video_comt_thumbs_down_localstorage",
-													false);
-
-											var span = $(this.children[0]);
-											var voteNum = span.text();
-											voteNum = Number(voteNum) - 1;
-											span.text(voteNum);
-											$(this).removeClass(
-													"icon-thumbs-down");
-											$(this).addClass(
-													"icon-thumbs-o-down");
-											cancelVote(cId);
-										}
-										e.stopPropagation();
-									});
-
-					$("div")
-							.on(
-									"click",
-									".thumbs-up-btn .icon-thumbs-o-up",
-									function(e) {
-										if (this === e.target) {
-											var cId = $(this).data("cid");
-											var f = cacheData(
-													cId,
-													"video_comt_thumbs_up_localstorage",
-													true);
+											//处理thumbs-down-btn
+										    var nextNode = $(this).parent(".thumbs-up-btn").next();
+										    nextNode.removeClass("thumbs-down-btn");
+										    nextNode.addClass("thumbs-btn-disable");
+										    nextNode.addClass("disabled");
+										    var f = cacheData(cId,"video_comt_thumbs_up_localstorage",true);
 											if (f) {
 												thumbsUp(cId);
 												var span = $(this.children[0]);
@@ -128,37 +71,75 @@ $(document)
 												voteNum = Number(voteNum) + 1;
 												span.text(voteNum);
 											}
-											$(this).removeClass(
-													"icon-thumbs-o-up");
+											$(this).removeClass("icon-thumbs-o-up");
 											$(this).addClass("icon-thumbs-up");
 										}
 										e.stopPropagation();
 									});
-					$("div")
-							.on(
-									"click",
-									".thumbs-up-btn .icon-thumbs-up",
-									function(e) {
+					$("div").on("click",".thumbs-up-btn .icon-thumbs-up",function(e) {
 										if (this === e.target) {
 											var cId = $(this).data("cid");
-
-											var f = cacheData(
-													cId,
-													"video_comt_thumbs_up_localstorage",
-													false);
-
-											$(this).removeClass(
-													"icon-thumbs-up");
-											$(this)
-													.addClass(
-															"icon-thumbs-o-up");
-
+											var f = cacheData(cId,"video_comt_thumbs_up_localstorage",false);
+											$(this).removeClass("icon-thumbs-up");
+											$(this).addClass("icon-thumbs-o-up");
 											var span = $(this.children[0]);
 											var voteNum = span.text();
 											voteNum = Number(voteNum) - 1;
 											span.text(voteNum);
+											//处理thumbs-down-btn
+											var nextNode = $(this).parent(".thumbs-up-btn").next();
+											nextNode.removeClass("thumbs-btn-disable");
+										    nextNode.removeClass("disabled");
+										    nextNode.addClass("thumbs-down-btn");
+											
 											cancelVote(cId);
+										}
+										e.stopPropagation();
+									});
 
+					$("div").on("click",".thumbs-down-btn .icon-thumbs-o-down",function(e) {
+										if (this === e.target) {
+											var cId = $(this).data("cid");
+											
+											//处理thumbs-up-btn
+											var nextNode = $(this).parent(".thumbs-down-btn").prev();
+											nextNode.addClass("thumbs-btn-disable");
+										    nextNode.addClass("disabled");
+										    nextNode.removeClass("thumbs-up-btn");
+										    
+											var f = cacheData(cId,"video_comt_thumbs_down_localstorage",true);
+											if (f) {
+												var span = $(this.children[0]);
+												var voteNum = span.text();
+												voteNum = Number(voteNum) + 1;
+												span.text(voteNum);
+												thumbsDown(cId);
+											}
+											$(this).removeClass("icon-thumbs-o-down");
+											$(this).addClass("icon-thumbs-down");
+										}
+										// 阻止事件冒泡到父元素
+										e.stopPropagation();
+									});
+
+					$("div").on("click",".thumbs-down-btn .icon-thumbs-down",function(e) {
+										if (this === e.target) {
+											var cId = $(this).data("cid");
+											var f = cacheData(cId,"video_comt_thumbs_down_localstorage",false);
+											var span = $(this.children[0]);
+											var voteNum = span.text();
+											voteNum = Number(voteNum) - 1;
+											span.text(voteNum);
+											$(this).removeClass("icon-thumbs-down");
+											$(this).addClass("icon-thumbs-o-down");
+											
+											//处理thumbs-up-btn
+											var nextNode = $(this).parent(".thumbs-down-btn").prev();
+											nextNode.removeClass("thumbs-btn-disable");
+										    nextNode.removeClass("disabled");
+										    nextNode.addClass("thumbs-up-btn");
+											
+											cancelVote(cId);
 										}
 										e.stopPropagation();
 									});
@@ -263,7 +244,7 @@ function comtHtml(c) {
 				+ '</div>'
 				+ '	<div>'
 				+ '	<a href="###"><strong>'
-				+ '用户名'
+				+ c.comtUname
 				+ '</strong></a>'
 				+ '	</div>'
 				+ '	<div class="text">'
@@ -272,6 +253,12 @@ function comtHtml(c) {
 				+ '	<div class="actions">'
 				+ '	<a class="comt-reply" data-cid='
 				+ cid
+				+ ' data-userid='
+				+ c.fromUid
+				+ ' data-nme='
+				+ c.comtUname
+				+ ' data-pic='
+				+ c.comtUpic
 				+ ' href="javascript:;">回复</a>'
 				+ '<div class="pull-right text-muted"><a class="reply-list-btn" href="javascript:;"><i class="icon icon-comment-alt" data-cid='
 				+ cid
@@ -293,11 +280,10 @@ function comtHtml(c) {
 	}
 	return html;
 }
-function replyHtml(r,cId) {
+function replyHtml(r, cId) {
 	var html = '';
 	if (r) {
-		html += '<div class="comment reply">'
-				+ '<a href="###" class="avatar">'
+		html += '<div class="comment reply">' + '<a href="###" class="avatar">'
 				+ '<img style="    height: 30px; width: 30px;" src="'
 				+ basePath
 				+ '/app/images/deft-head.ico">'
@@ -307,22 +293,31 @@ function replyHtml(r,cId) {
 				+ moment(r.createTime).format("YYYY-MM-DD HH:mm")
 				+ '</div>'
 				+ '<div>'
-				+ '<a href="###"><strong>华师大第一美女</strong></a> <span class="text-muted">回复</span> <a href="###">张士超</a>'
-				+ '</div>' + '<div class="text">' + r.content + '</div>'
-				+ '<div class="actions">' 
+				+ '<a href="###"><strong>'
+				+ r.comtUname
+				+'</strong></a> <span class="text-muted">回复</span> <a href="###">'
+				+ r.repliedUname
+				+'</a>'
+				+ '</div>'
+				+ '<div class="text">'
+				+ r.content
+				+ '</div>'
+				+ '<div class="actions">'
 				+ '	<a class="comt-reply" data-rid='
 				+ r.id
-				+' data-cid='
+				+ ' data-cid='
 				+ cId
+				+ ' data-userid='
+				+ r.replyUid
+				+ ' data-nme='
+				+ r.comtUname
+				+ ' data-pic='
+				+ r.comtUpic
 				+ ' href="javascript:;">回复</a>'
-				+ '</div>'
-				+ '	</div>' 
-				
-				+ '<div id="'
-				+ r.id
-				+ '_div'
-				+ '"></div>'
-				
+				+ '</div>' + '	</div>'
+
+				+ '<div id="' + r.id + '_div' + '"></div>'
+
 				+ '	</div>';
 	}
 
@@ -340,7 +335,7 @@ function buildComtModel(data) {
 			if (replys && replys.length > 0) {
 				for (var i = 0; i < replys.length; i++) {
 					var re = replys[i];
-					replyList += replyHtml(re,c.id);
+					replyList += replyHtml(re, c.id);
 				}
 			}
 			replyList += '</div>';
@@ -368,8 +363,8 @@ function comment() {
 
 	var content = editor.getContent();
 	var data = {
-		topicId : "voidID1111111",
-		fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",
+		topicId : videoId,
+		fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",//评论人的id:后台自动获得此处不用填
 		replyUid : "",
 		content : content,
 		replyGroup : "",
@@ -403,32 +398,32 @@ function reply(cId, comtId, afalg) {
 	$("#" + cId + '_div').append(edi);
 
 	UE.registerUI('确认回复', function(editor, uiName) {
-				var btn = new UE.ui.Button({
-					name : uiName,
-					title : uiName,
-					cssRules : 'background-position: -480px -20px;',
-					onclick : function() {
-						submitReply(cId,comtId,afalg);
-						 cancelReply(cId,afalg);
-					}
-				});
+		var btn = new UE.ui.Button({
+			name : uiName,
+			title : uiName,
+			cssRules : 'background-position: -480px -20px;',
+			onclick : function() {
+				submitReply(cId, comtId, afalg);
+				cancelReply(cId, afalg);
+			}
+		});
 
-				editor.addListener('selectionchange', function() {
-					var state = editor.queryCommandState(uiName);
-					if (state == -1) {
-						btn.setDisabled(true);
-						btn.setChecked(false);
-					} else {
-						btn.setDisabled(false);
-						btn.setChecked(state);
-					}
-				});
+		editor.addListener('selectionchange', function() {
+			var state = editor.queryCommandState(uiName);
+			if (state == -1) {
+				btn.setDisabled(true);
+				btn.setChecked(false);
+			} else {
+				btn.setDisabled(false);
+				btn.setChecked(state);
+			}
+		});
 
-				return btn;
-			}/*
-				 * index 指定添加到工具栏上的那个位置，默认时追加到最后,editorId
-				 * 指定这个UI是那个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮
-				 */);
+		return btn;
+	}/*
+		 * index 指定添加到工具栏上的那个位置，默认时追加到最后,editorId
+		 * 指定这个UI是那个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮
+		 */);
 
 	var editor = UE.getEditor(ume, {
 		toolbars : [ [ 'removeformat', 'selectall', 'cleardoc', 'emotion'
@@ -437,28 +432,33 @@ function reply(cId, comtId, afalg) {
 		wordCount : false
 	});
 }
-function cancelReply(cId,afalg) {
+function cancelReply(cId, afalg) {
 	afalg.removeClass("comt-cancel-reply");
 	afalg.addClass("comt-reply");
 	afalg.text("回复");
-	
+
 	var ume = cId + "_editor";
 	UE.getEditor(ume).destroy();
-	$("#" + cId+"_div").empty();
+	$("#" + cId + "_div").empty();
 }
-function submitReply(cId,comtId) {
+function submitReply(cId, comtId,afalg) {
 	var ume = cId + "_editor";
+	var userid = afalg.data("userid");
+	var username = afalg.data("nme");
+	var pic=afalg.data("pic");
 	var content = UE.getEditor(ume).getContent();
-	var data  = {
-					id : comtId?comtId:cId,
-					topicId : "voidID1111111",
-					fromUid : "2e7a8ec1-c39b-11e7-9786-d017c298b1bf",
-					replyUid : "11ea8ae5-c44c-11e7-a1be-d017c298b1bf",
-					content : content,
-					replyGroup : comtId?comtId:cId,
-					replyedId : cId,
-					vcType : "HF"
-				};
+	var data = {
+		//id : comtId ? comtId : cId,
+		topicId : videoId,
+		fromUid : userid,//被回复人的id
+		replyUid : "11ea8ae5-c44c-11e7-a1be-d017c298b1bf",//回复人的id:后台自动获得此处不用填
+		content : content,
+		replyGroup : comtId ? comtId : cId,//评论id
+		replyedId : cId,
+		repliedUname : username,
+		repliedUpic : pic,
+		vcType : "HF"
+	};
 
 	$.ajax({
 		type : 'post',
@@ -468,12 +468,12 @@ function submitReply(cId,comtId) {
 		success : function(result) {
 			if (result.success == "true") {
 				var re = result.data;
-				var rep =  (comtId?comtId:cId) + '_reply_list';
-				var repHtml = replyHtml(re,comtId?comtId:cId);
+				var rep = (comtId ? comtId : cId) + '_reply_list';
+				var repHtml = replyHtml(re, comtId ? comtId : cId);
 				$("#" + rep).prepend(repHtml);
-//				if(comtId){
-//					cancelReply(cId);
-//				}
+				// if(comtId){
+				// cancelReply(cId);
+				// }
 			} else {
 				alert("请登录");
 				return false;
@@ -481,7 +481,7 @@ function submitReply(cId,comtId) {
 		}
 	});
 }
- 
+
 // 点赞
 function thumbsUp(cId) {
 	$.ajax({

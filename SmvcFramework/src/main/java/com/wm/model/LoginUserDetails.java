@@ -30,6 +30,7 @@ public class LoginUserDetails extends User {
 	private String id;
 	private String uAccount;
 	private String uName;
+	private String uPhoto;
 	private String uPwd;
 	private String uEmail;
 	private String uTel;
@@ -66,6 +67,14 @@ public class LoginUserDetails extends User {
 
 	public void setuName(String uName) {
 		this.uName = uName;
+	}
+
+	public String getuPhoto() {
+		return uPhoto;
+	}
+
+	public void setuPhoto(String uPhoto) {
+		this.uPhoto = uPhoto;
 	}
 
 	public String getuPwd() {
@@ -163,6 +172,7 @@ public class LoginUserDetails extends User {
 		this.uName = sysUser.getuName();
 		this.uEmail = sysUser.getuEmail();
 		this.roleName=sysUser.getRoleName();
+		this.uPhoto =sysUser.getuPhoto();
 
 	}
 
