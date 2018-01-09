@@ -70,4 +70,13 @@ public class VideoCommentServiceImpl implements VideoCommentService {
 		vc.setDislikeCount((int) disLike);
 		videoCommentMapper.update(vc);
 	}
+
+	public void batDelete(String[] ids) {
+		VideoComment vc = new VideoComment();
+		for (int i = 0; i < ids.length; i++) {
+			vc.setId(ids[i]);
+			this.delete(vc);
+		}
+		
+	}
 }

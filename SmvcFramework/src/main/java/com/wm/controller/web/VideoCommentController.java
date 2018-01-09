@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.wm.controller.base.BaseController;
 import com.wm.mapper.entity.VideoComment;
@@ -162,6 +165,80 @@ public class VideoCommentController extends BaseController<VideoComment> {
 			e.printStackTrace();
 			result.put("success", "false");
 			result.put("msg", "请求失败");
+		}
+		return result;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/video_comt_list", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public ModelAndView videoComtList(HttpServletResponse response,
+			HttpServletRequest request, Model model) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("success", "true");
+			result.put("msg", "请求成功");
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("success", "false");
+			result.put("msg", "请求失败");
+		}
+		return new ModelAndView("main/admin/comment/video_comt_list", result);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/vc_list_data", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public Map<String, Object> videoComtListData(
+			@RequestParam("curPage") int curPage,
+			@RequestParam("pageSize") int pageSize, HttpServletRequest request) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		try {
+			Map<String, Object> param = getFormParam(request);
+			param.put("curPage", curPage);
+			param.put("pageSize", pageSize);
+			param.put("vcType", "PL");
+			List<VideoComment> data = videoCommentService.queryByPage(param);
+			Map<String, Object> pageInfo = getPageInfo(data);
+			result.put("success", "true");
+			result.put("msg", "请求成功");
+			result.put("data", data);
+			result.put("param", param);
+			result.put("pageInfo", pageInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("success", "false");
+			result.put("msg", "请求失败");
+		}
+		return result;
+
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/del_comt", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public Map<String, Object> delComt(@RequestParam("cId") String cId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			// 不再事务内需改进
+			String[] ids = cId.split(",");
+			if(ids.length>0){
+				videoCommentService.batDelete(ids);
+				result.put("success", "true");
+				result.put("msg", "删除成功");
+				result.put("data", "");
+			}else{
+				result.put("success", "false");
+				result.put("msg", "删除失败");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("success", "false");
+			result.put("msg", "删除失败");
 		}
 		return result;
 	}

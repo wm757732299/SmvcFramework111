@@ -97,6 +97,16 @@ var CodeTool = function() {
 		});
 
 	};
+	
+	var _btnsListener = function(){
+		console.log(999);
+		$('.btn-copy').click(function(e) {
+			var code = $(this).data("codeid");
+			console.log($("#"+code).val());
+		});
+ 
+		
+	};
 	//==选择tab页==//
 	var _changeTab = function() {
 		$('[data-tab]').on('shown.zui.tab', function(e) {
@@ -118,6 +128,7 @@ var CodeTool = function() {
 			hljs.initHighlightingOnLoad();
 			_changeStyle();
 			_changeTab();
+//			_btnsListener();
 		},
 		selectTable : function(tableName) {
 			_selectTable(tableName);

@@ -69,4 +69,7 @@ public class SysMenuServiceImpl implements SysMenuService {
 		return sysMenuMapper.queryMenuTree(sysMenu);
 	}
 
+	public long queryCount(SysMenu sysMenu){
+		return sysMenuMapper.queryCount(sysMenu);
+	}
 }

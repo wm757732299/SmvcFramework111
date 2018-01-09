@@ -17427,7 +17427,7 @@ UE.plugins['autoheight'] = function () {
             if(lastScrollY === null){
                 lastScrollY = this.scrollY
             }else if(this.scrollY == 0 && lastScrollY != 0){
-            	if(me.window.scrollTo){
+            	if(me.window && me.window.scrollTo){
             		  me.window.scrollTo(0,0);
             	}
                 lastScrollY = null;

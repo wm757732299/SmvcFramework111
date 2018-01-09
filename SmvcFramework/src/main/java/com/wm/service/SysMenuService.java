@@ -10,4 +10,6 @@ public interface SysMenuService extends IBaseService<SysMenu>{
 	public List<SysMenu> queryMenuInfo(String condition);
 
 	public List<SysMenu> queryMenuTree(SysMenu sysMenu);
+
+	public long queryCount(SysMenu sysMenu);
 }

@@ -14,4 +14,6 @@ public interface VideoCommentService extends IBaseService<VideoComment>{
 	 * 同步点赞数到技术字段
 	 */
 	public void syncVotes(String id);
+
+	public void batDelete(String[] ids);
 }

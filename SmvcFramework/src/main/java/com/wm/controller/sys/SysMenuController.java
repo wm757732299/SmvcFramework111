@@ -223,16 +223,14 @@ public class SysMenuController extends BaseController<SysMenu> {
 	public Map<String, Object> saveMenu(SysMenu sysMenu) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			SysMenu param = new SysMenu();
-			param.setMenuName(sysMenu.getMenuName());
-			List<SysMenu> m = sysMenuService.queryByCondition(param);
-
-			if (m != null && m.size() > 0) {
+			SysMenu m = new SysMenu();
+			m.setMenuName(sysMenu.getMenuName());
+			long count = sysMenuService.queryCount(m);
+			if (count > 0) {
 				result.put("success", "false");
 				result.put("msg", "保存失败，菜单名不能重复！");
 				return result;
 			} else {
-
 				sysMenu.setTimeStamp(new Timestamp(new Date().getTime()));
 				sysMenu.setIsAvailable(0);
 				sysMenuService.insert(sysMenu);
@@ -312,7 +310,8 @@ public class SysMenuController extends BaseController<SysMenu> {
 					result.put("data", menu);
 				}
 			} else {
-				SysMenu menu = sysMenuService.queryByKey(sysMenu.getId());
+				SysMenu menu = new SysMenu();
+				menu.setId(sysMenu.getId());
 				menu.setMenuName(sysMenu.getMenuName());
 				menu.setMenuIcon(sysMenu.getMenuIcon());
 				menu.setMenuUrl(sysMenu.getMenuUrl());
@@ -322,7 +321,7 @@ public class SysMenuController extends BaseController<SysMenu> {
 				sysMenuService.update(menu);
 				result.put("success", "true");
 				result.put("msg", "请求成功");
-				result.put("data", menu);
+				result.put("data", sysMenu);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
