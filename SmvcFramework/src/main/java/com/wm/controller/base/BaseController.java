@@ -82,4 +82,17 @@ public abstract class BaseController<T> {
 		}
 		return id;
 	}
+
+	public boolean checkLogin(String uId) {
+		boolean flag = false;
+
+		LoginUserDetails ld = this.getLoginUser();
+		if (ld == null||ld.getId()==null)
+			return flag;
+
+		if (ld.getId().equals(uId))
+			flag = true;
+
+		return flag;
+	}
 }

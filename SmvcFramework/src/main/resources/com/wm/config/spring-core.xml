@@ -25,6 +25,9 @@
 				<value>
 					classpath:com/wm/config/properties/config.properties
 				</value>
+				<value>
+					classpath:com/wm/config/properties/redis.properties
+				</value>
 			</list>
 		</property>
 		<property name="fileEncoding">
@@ -90,7 +93,6 @@
 		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
 
 		<property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"></property>
-	
 	</bean>
 
 	<bean id="dataSource" class="com.wm.common.db.MultipleDataSource">
@@ -111,6 +113,24 @@
 		<property name="configLocation"
 			value="classpath:com/wm/config/spring-mybatis.xml" />
 	</bean>
+
+	<!--  redis配置 -->
+ 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <property name="maxIdle" value="${redis.maxIdle}" />  
+        <property name="maxTotal" value="${redis.maxActive}" />  
+        <property name="maxWaitMillis" value="${redis.maxWait}" />  
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />  
+    </bean>  
+    <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <constructor-arg ref="jedisPoolConfig" />   
+        <property name="hostName" value="${redis.host}" />  
+    	<property name="port" value="${redis.port}" />  
+<!--         p:password="${redis.pass}"   -->
+	</bean> 
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
+        <property name="connectionFactory"   ref="connectionFactory" />  
+    </bean>
+
 
 	<!-- 扫描mybatis mappers -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

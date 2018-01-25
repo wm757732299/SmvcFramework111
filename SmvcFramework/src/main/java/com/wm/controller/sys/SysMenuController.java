@@ -173,6 +173,7 @@ public class SysMenuController extends BaseController<SysMenu> {
 					item01.put("text", sysMenu.getMenuName());
 					item01.put("url", sysMenu.getMenuUrl());
 					item01.put("icon", sysMenu.getMenuIcon());
+					item01.put("nodeType", sysMenu.getNodeType());
 					if (SysMenu.PARENT_NODE == sysMenu.getNodeType()) {
 						item01.put("active", true);
 						item01.put("children",

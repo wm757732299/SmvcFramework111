@@ -1,14 +1,8 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
 
 
 
@@ -42,7 +36,20 @@ public class Test {
 	public static void main(String[] args) {
 		
 		
+		String str ="Wed Jan 03 17:20:57 CST 2018";
 		
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date d = new Date(str);
+		d.parse(str);
+		System.out.println(sf.format(d));
+//		try {
+//			//Date sdatr =sf.parse(str);
+//			
+//			System.out.println(sf.format(d));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		
 		

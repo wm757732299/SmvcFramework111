@@ -232,3 +232,6 @@ body {
 /* 	float: left; */
 	display: inline-block;
 }
+.btn{
+	    border-radius: 2px;
+}

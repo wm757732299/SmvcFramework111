@@ -1,15 +1,21 @@
 package com.wm.controller.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +30,7 @@ import com.wm.mapper.entity.VideoCommentVote;
 import com.wm.model.LoginUserDetails;
 import com.wm.service.VideoCommentService;
 import com.wm.service.VideoCommentVoteService;
+import com.wm.util.BeansUtil;
 import com.wm.util.CommentVoteQueue;
 
 @Controller
@@ -94,7 +101,7 @@ public class VideoCommentController extends BaseController<VideoComment> {
 	public Map<String, Object> getComt(HttpServletResponse response,
 			HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
-
+		try {
 		VideoComment vc = new VideoComment();
 		vc.setTopicId("voidID1111111");
 		vc.setVcType("PL");
@@ -113,7 +120,13 @@ public class VideoCommentController extends BaseController<VideoComment> {
 			param.put("replyGroup", videoComment.getId());
 			videoComment.setReplyList(videoCommentService.queryByPage(param));
 		}
-		try {
+		
+			redisDb(vcs);
+			List<VideoComment> vcs2 = getDatas();
+			if(vcs2!=null){
+				vcs=vcs2;
+			}
+			
 			result.put("success", "true");
 			result.put("msg", "请求成功");
 			result.put("data", vcs);
@@ -224,7 +237,6 @@ public class VideoCommentController extends BaseController<VideoComment> {
 	public Map<String, Object> delComt(@RequestParam("cId") String cId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			// 不再事务内需改进
 			String[] ids = cId.split(",");
 			if(ids.length>0){
 				videoCommentService.batDelete(ids);
@@ -241,5 +253,124 @@ public class VideoCommentController extends BaseController<VideoComment> {
 			result.put("msg", "删除失败");
 		}
 		return result;
+	}
+	
+	
+	 @Autowired
+	  private StringRedisTemplate redisTemplate;
+	public void redisDb(List<VideoComment> vcs){
+	
+		HashOperations<String,Object,Object> opshash = redisTemplate.opsForHash();
+		BeansUtil bu = new BeansUtil();
+		for (VideoComment vc : vcs) {
+			Map<String,String> map = bu.objToMap(vc, vc.getClass());
+			opshash.putAll("PL"+vc.getId(), map);
+		}
+		
+		 
+		
+		
+
+		
+		
+		//redisTemplate.opsForValue().set("eeeeeeee", "ddddddddd");
+//		ListOperations<String, String> opsList = redisTemplate.opsForList();
+//		List<List<String>> s = toString(vcs);
+//		Set<String> keys = redisTemplate.keys("video_comment"+"*");
+//		if(keys.isEmpty()){
+////			redisTemplate.delete(keys);
+//			for (int i = 0; i < s.size(); i++) {
+//				opsList.leftPushAll("video_comment"+s.get(i).get(0), s.get(i));
+//			}
+//		}
+	}
+	
+	public List<VideoComment> getDatas(){
+		Set<String> keys = redisTemplate.keys("PL"+"*");
+		Iterator<String> it= keys.iterator();
+		List<VideoComment> s = new ArrayList<VideoComment>();
+		while(it.hasNext()){
+			String key = it.next();
+			VideoComment vc = (VideoComment)getData(key, VideoComment.class);
+			 s.add(vc);
+		}
+		return s;
+	}
+	
+	
+	public Object getData(String key,Class<?> clazz){
+		HashOperations<String,Object,Object> opshash = redisTemplate.opsForHash();
+		Map<Object, Object> mm = opshash.entries(key);
+		BeansUtil bu = new BeansUtil();
+		return bu.mapToObj(mm, clazz);
+	}
+	public List<List<String>> toString(List<VideoComment> v){
+		List<List<String>> s = new ArrayList<List<String>>();
+		StringBuffer sb= new StringBuffer();
+		for (VideoComment vc : v) {
+			List<String> l = new ArrayList<String>();
+			l.add(vc.getId());
+			l.add(vc.getTopicId()==null?"":vc.getTopicId());
+			l.add(vc.getFromUid()==null?"":vc.getFromUid());
+			l.add(vc.getReplyUid()==null?"":vc.getReplyUid());
+			l.add(vc.getContent()==null?"":vc.getContent());
+			l.add(vc.getReplyGroup()==null?"":vc.getReplyGroup());
+			l.add(vc.getReplyedId()==null?"":vc.getReplyedId());
+			l.add(vc.getVcType()==null?"":vc.getVcType());
+			l.add(vc.getLikeCount()+"");
+			l.add(vc.getDislikeCount()+"");
+			l.add(vc.getComtUname()==null?"":vc.getComtUname());
+			l.add(vc.getComtUpic()==null?"":vc.getComtUpic());
+			l.add(vc.getRepliedUname()==null?"":vc.getRepliedUname());
+			l.add(vc.getRepliedUpic()==null?"":vc.getRepliedUpic());
+			l.add(vc.getCreateTime().toString());
+			l.add(vc.getTimeStamp().toString());
+			l.add(vc.getDeleteMark()+"");
+			s.add(l);
+		}
+		
+		return s;
+		
+	}
+	
+ 
+	public List<VideoComment> toBean(){
+		Set<String> keys = redisTemplate.keys("video_comment"+"*");
+		Iterator<String> it= keys.iterator();
+		List<List<String>> s = new ArrayList<List<String>>();
+		while(it.hasNext()){
+			String key = it.next();
+			s.add(redisTemplate.opsForList().range(key, 0, -1));
+		}
+		System.out.println("3e");
+		List<VideoComment> vcl= null;
+		if(s.size()>0){
+			vcl =new ArrayList<VideoComment>();
+			for (List<String> list : s) {
+				
+				VideoComment  vc = new VideoComment();
+				vc.setId(list.get(0));
+						vc.setTopicId(list.get(15));
+						vc.setFromUid(list.get(14));
+						vc.setReplyUid(list.get(13));
+						vc.setContent(list.get(12));
+						vc.setReplyGroup(list.get(11));
+						vc.setReplyedId(list.get(10));
+						vc.setVcType(list.get(9));
+						vc.setLikeCount(Integer.parseInt(list.get(8)));
+						vc.setDislikeCount(Integer.parseInt(list.get(7)));
+						vc.setComtUname(list.get(6));
+						vc.setComtUpic(list.get(5));
+						vc.setRepliedUname(list.get(4));
+						vc.setRepliedUpic(list.get(3));
+						vc.setCreateTime(new Date(list.get(2)));
+						vc.setTimeStamp(new Date(list.get(1)));
+						vc.setDeleteMark(Integer.parseInt(list.get(0)));
+				 
+						vcl.add(vc);
+			}
+		}
+		
+		return vcl;
 	}
 }

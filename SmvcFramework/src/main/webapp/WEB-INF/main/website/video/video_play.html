@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SmvcFramework</title>
 <link href="${basePath}/app/plugin/zui1.7.0/dist/css/zui.css" rel="stylesheet">
 <link href="${basePath}/app/plugin/videojs/video-js.css" rel="stylesheet">
 
@@ -14,55 +14,16 @@
 
 </head>
 <body>
-	<header class="header">
-		<nav class="navbar" role="navigation">
-			<div class="container-fluid">
-				<!-- 导航头部 -->
-				<div class="navbar-header">
-					<!-- 品牌名称或logo -->
-					<a class="navbar-brand" href="#">WMTOUCH</a>
-				</div>
-				<!-- 导航项目 -->
-				<div class="collapse navbar-collapse navbar-collapse-example">
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="#">首页</a></li>
-						<li><a href="#">电视直播</a></li>
-						<li><a href="#">快看</a></li>
-						<li><a href="#">最新动态</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">探索 <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="#">探索世界</a></li>
-								<li><a href="#">探索宇宙</a></li>
-							</ul></li>
-					</ul>
 
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">帮助</a></li>
-						<li class="dropdown active"><a href="#" class="dropdown-toggle" data-toggle="dropdown">关于我<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="#">个人简介</a></li>
-								<li><a href="#">作品展示</a></li>
-								<li class="divider"></li>
-								<li><a href="#">留言</a></li>
-							</ul></li>
-						<li><a href="wm">管理端</a></li>
-					</ul>
-
-				</div>
-			</div>
-		</nav>
-		<hr class="header-hr">
-	</header>
-
+<#include "../common/head_menu.html">
 
 	<div class="play-main">
-
-
+	
 		<div id="player" class="play-div">
 			<video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="916px" height="490"
 				poster="http://video-js.zencoder.com/oceans-clip.png" data-setup='{"example_option":true}'>
-				<source src='rtmp://localhost/oflaDemo/BladeRunner2049.flv' type='rtmp/flv' />
-				<source src="${basePath}/mp4/mov_bbb.mp4" type='video/mp4' />
+				<source src='rtmp://localhost/oflaDemo/BladeRunner2049' type='rtmp/flv' />
+<!-- 				<source src="${basePath}/mp4/mov_bbb.mp4" type='video/mp4' /> -->
 				<source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
 				<source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
 				<p class="vjs-no-js">

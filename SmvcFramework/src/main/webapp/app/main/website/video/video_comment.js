@@ -8,16 +8,17 @@ $(document).ready(function() {
 	
 					$("div").on("click", ".comt-reply", function(e) {
 						if (this === e.target) {
-							var cId = $(this).data("cid");
-							var rId = $(this).data("rid");
-							$(this).removeClass("comt-reply");
-							$(this).addClass("comt-cancel-reply");
-							$(this).text("取消回复");
-							var afalg = $(this);
+							var ckEle=$(this);//被点击jq对象
+							
+							var cId = ckEle.data("cid");
+							var rId = ckEle.data("rid");
+							ckEle.removeClass("comt-reply");
+							ckEle.addClass("comt-cancel-reply");
+							ckEle.text("取消回复");
 							if (rId) {
-								reply(rId, cId, afalg);//回复的回复
+								reply(rId, cId, ckEle);//回复的回复
 							} else {
-								reply(cId, null, afalg);//评论的回复
+								reply(cId, null, ckEle);//评论的回复
 							}
 
 						}
@@ -26,16 +27,17 @@ $(document).ready(function() {
 					});
 					$("div").on("click", ".comt-cancel-reply", function(e) {
 						if (this === e.target) {
-							var cId = $(this).data("cid");
-							var rId = $(this).data("rid");
-							$(this).removeClass("comt-cancel-reply");
-							$(this).addClass("comt-reply");
-							$(this).text("回复");
-							var afalg = $(this);
+							var ckEle=$(this);//被点击jq对象
+							
+							var cId = ckEle.data("cid");
+							var rId = ckEle.data("rid");
+							ckEle.removeClass("comt-cancel-reply");
+							ckEle.addClass("comt-reply");
+							ckEle.text("回复");
 							if (rId) {
-								cancelReply(rId, afalg);
+								cancelReply(rId, ckEle);
 							} else {
-								cancelReply(cId, afalg);
+								cancelReply(cId, ckEle);
 							}
 
 						}
@@ -45,9 +47,12 @@ $(document).ready(function() {
 
 					$("div").on("click", ".icon-comment-alt", function(e) {
 						if (this === e.target) {
+							var ckEle=$(this);//被点击jq对象
+							
 							var cId = $(this).data("cid");
 
 							codeEff(1, function() {
+								console.log($(this).data("cid"));
 							});
 
 						}
@@ -57,9 +62,11 @@ $(document).ready(function() {
 
 					$("div").on("click",".thumbs-up-btn .icon-thumbs-o-up",function(e) {
 										if (this === e.target) {
-											var cId = $(this).data("cid");
+											var ckEle=$(this);//被点击jq对象
+											
+											var cId = ckEle.data("cid");
 											//处理thumbs-down-btn
-										    var nextNode = $(this).parent(".thumbs-up-btn").next();
+										    var nextNode = ckEle.parent(".thumbs-up-btn").next();
 										    nextNode.removeClass("thumbs-down-btn");
 										    nextNode.addClass("thumbs-btn-disable");
 										    nextNode.addClass("disabled");
@@ -71,23 +78,25 @@ $(document).ready(function() {
 												voteNum = Number(voteNum) + 1;
 												span.text(voteNum);
 											}
-											$(this).removeClass("icon-thumbs-o-up");
-											$(this).addClass("icon-thumbs-up");
+											ckEle.removeClass("icon-thumbs-o-up");
+											ckEle.addClass("icon-thumbs-up");
 										}
 										e.stopPropagation();
 									});
 					$("div").on("click",".thumbs-up-btn .icon-thumbs-up",function(e) {
 										if (this === e.target) {
-											var cId = $(this).data("cid");
+											var ckEle=$(this);//被点击jq对象
+											
+											var cId = ckEle.data("cid");
 											var f = cacheData(cId,"video_comt_thumbs_up_localstorage",false);
-											$(this).removeClass("icon-thumbs-up");
-											$(this).addClass("icon-thumbs-o-up");
+											ckEle.removeClass("icon-thumbs-up");
+											ckEle.addClass("icon-thumbs-o-up");
 											var span = $(this.children[0]);
 											var voteNum = span.text();
 											voteNum = Number(voteNum) - 1;
 											span.text(voteNum);
 											//处理thumbs-down-btn
-											var nextNode = $(this).parent(".thumbs-up-btn").next();
+											var nextNode = ckEle.parent(".thumbs-up-btn").next();
 											nextNode.removeClass("thumbs-btn-disable");
 										    nextNode.removeClass("disabled");
 										    nextNode.addClass("thumbs-down-btn");
@@ -99,10 +108,11 @@ $(document).ready(function() {
 
 					$("div").on("click",".thumbs-down-btn .icon-thumbs-o-down",function(e) {
 										if (this === e.target) {
-											var cId = $(this).data("cid");
+											var ckEle=$(this);//被点击jq对象
 											
+											var cId = ckEle.data("cid");
 											//处理thumbs-up-btn
-											var nextNode = $(this).parent(".thumbs-down-btn").prev();
+											var nextNode = ckEle.parent(".thumbs-down-btn").prev();
 											nextNode.addClass("thumbs-btn-disable");
 										    nextNode.addClass("disabled");
 										    nextNode.removeClass("thumbs-up-btn");
@@ -115,8 +125,8 @@ $(document).ready(function() {
 												span.text(voteNum);
 												thumbsDown(cId);
 											}
-											$(this).removeClass("icon-thumbs-o-down");
-											$(this).addClass("icon-thumbs-down");
+											ckEle.removeClass("icon-thumbs-o-down");
+											ckEle.addClass("icon-thumbs-down");
 										}
 										// 阻止事件冒泡到父元素
 										e.stopPropagation();
@@ -124,17 +134,19 @@ $(document).ready(function() {
 
 					$("div").on("click",".thumbs-down-btn .icon-thumbs-down",function(e) {
 										if (this === e.target) {
-											var cId = $(this).data("cid");
+											var ckEle=$(this);//被点击jq对象
+											
+											var cId = ckEle.data("cid");
 											var f = cacheData(cId,"video_comt_thumbs_down_localstorage",false);
 											var span = $(this.children[0]);
 											var voteNum = span.text();
 											voteNum = Number(voteNum) - 1;
 											span.text(voteNum);
-											$(this).removeClass("icon-thumbs-down");
-											$(this).addClass("icon-thumbs-o-down");
+											ckEle.removeClass("icon-thumbs-down");
+											ckEle.addClass("icon-thumbs-o-down");
 											
 											//处理thumbs-up-btn
-											var nextNode = $(this).parent(".thumbs-down-btn").prev();
+											var nextNode = ckEle.parent(".thumbs-down-btn").prev();
 											nextNode.removeClass("thumbs-btn-disable");
 										    nextNode.removeClass("disabled");
 										    nextNode.addClass("thumbs-up-btn");
