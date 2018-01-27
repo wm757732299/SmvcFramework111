@@ -1,5 +1,7 @@
 package com.wm.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +13,7 @@ import com.wm.mapper.entity.SysAction;
 @MybatisMapper
 @Repository("sysActionMapper")
 public interface SysActionMapper extends IBaseMapper<SysAction> {
+
+	public List<SysAction> queryLoginAct(String userId);
 
 }

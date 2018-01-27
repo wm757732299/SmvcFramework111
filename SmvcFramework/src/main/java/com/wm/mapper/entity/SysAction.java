@@ -14,6 +14,7 @@ public class SysAction implements Serializable {
 	private Integer actCode;
 	private String actName;
 	private Integer actType;
+	private String menuId;
 	private Date createTime;
 	private Date timeStamp;
 	private int deleteMark;
@@ -52,6 +53,14 @@ public class SysAction implements Serializable {
 
 	public void setActType(Integer actType) {
 		this.actType = actType;
+	}
+
+	public String getMenuId() {
+		return menuId;
+	}
+
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 	public Date getCreateTime() {

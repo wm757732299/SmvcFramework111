@@ -9,6 +9,7 @@
 		<result property="actCode" column="ACT_CODE" />	
 		<result property="actName" column="ACT_NAME" />	
 		<result property="actType" column="ACT_TYPE" />	
+		<result property="menuId" column="MENU_ID" />	
 		<result property="createTime" column="CREATE_TIME" />	
 		<result property="timeStamp" column="TIME_STAMP" />	
 		<result property="deleteMark" column="DELETE_MARK" />	
@@ -16,7 +17,7 @@
 
 
 	<sql id="Table_Fields">
-		 ID,ACT_CODE,ACT_NAME,ACT_TYPE,CREATE_TIME,TIME_STAMP,DELETE_MARK
+		 ID,ACT_CODE,ACT_NAME,ACT_TYPE,MENU_ID,CREATE_TIME,TIME_STAMP,DELETE_MARK
 	</sql>
 
     <sql id="Where_Conditions">
@@ -33,6 +34,9 @@
 			</if>	
 			<if test="actType != null"> 
 				AND ACT_TYPE = #{actType} 
+			</if>	
+			<if test="menuId != null"> 
+				AND MENU_ID = #{menuId} 
 			</if>	
 			<if test="createTime != null"> 
 				AND CREATE_TIME = #{createTime} 
@@ -60,6 +64,9 @@
 			<if test="actType != null"> 
 				ACT_TYPE = #{actType}, 
 			</if>	
+			<if test="menuId != null"> 
+				MENU_ID = #{menuId}, 
+			</if>	
 			<if test="createTime != null"> 
 				CREATE_TIME = #{createTime}, 
 			</if>	
@@ -75,9 +82,9 @@
 	<insert id="insert" parameterType="com.wm.mapper.entity.SysAction" >
 			<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">select uuid()</selectKey>
 			INSERT INTO SYS_ACTION
-			  (ID,ACT_CODE,ACT_NAME,ACT_TYPE,CREATE_TIME,TIME_STAMP,DELETE_MARK)
+			  (ID,ACT_CODE,ACT_NAME,ACT_TYPE,MENU_ID,CREATE_TIME,TIME_STAMP,DELETE_MARK)
 			VALUES 
-			  (#{id},#{actCode},#{actName},#{actType},#{createTime},#{timeStamp},#{deleteMark})
+			  (#{id},#{actCode},#{actName},#{actType},#{menuId},#{createTime},#{timeStamp},#{deleteMark})
 	</insert>
 	
 	<delete id="deleteTrueByKey" parameterType="java.lang.String" >
@@ -126,5 +133,19 @@
 		SELECT COUNT(ID)
  		FROM SYS_ACTION
  		<include refid="Where_Conditions" />
+	</select>
+	
+	<select id="queryLoginAct" parameterType="java.lang.String" resultMap="sysAction">
+ 		SELECT
+			sac.id,
+			sac.act_name,
+			sac.menu_id
+		FROM
+			sys_action sac
+		LEFT JOIN sys_role_action sra ON sra.action_id = sac.id
+		LEFT JOIN sys_role r ON r.id = sra.role_id
+		LEFT JOIN sys_user_role ur ON ur.role_id = r.id
+		WHERE
+			ur.user_id =#{userId} 
 	</select>
 </mapper>

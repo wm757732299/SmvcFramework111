@@ -51,4 +51,10 @@ public class SysActionServiceImpl implements SysActionService {
 		}
 	}
 
+	@Override
+	public List<SysAction> queryLoginAct(String userId) {
+		return sysActionMapper.queryLoginAct(userId);
+		
+	}
+
 }

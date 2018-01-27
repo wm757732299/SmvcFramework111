@@ -1,5 +1,7 @@
 package com.wm.controller.sys;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,4 +107,27 @@ public class SysActionController extends BaseController<SysAction> {
 			}
 			return result;
 		}
+	
+	@ResponseBody
+	@RequestMapping(value = "/save_act", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public Map<String, Object> saveAct(SysAction sysAction) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			
+			Timestamp tp = new Timestamp(new Date().getTime());
+			sysAction.setCreateTime(tp);
+			sysAction.setTimeStamp(tp);
+			sysActionService.insert(sysAction);
+			
+			result.put("success", "true");
+			result.put("msg", "请求成功");
+			result.put("data", sysAction);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("success", "false");
+			result.put("msg", "请求失败");
+		}
+		return result;
+	}
 }
