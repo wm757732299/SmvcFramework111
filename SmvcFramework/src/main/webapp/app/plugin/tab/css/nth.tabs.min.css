@@ -108,7 +108,8 @@
 
 .dropdown-menu ul li {
 	line-height: 30px;
-	padding: 0 20px;
+/* 	padding: 0 20px; */
+	text-align: center;
 	white-space: nowrap;
 }
 
