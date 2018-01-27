@@ -77,58 +77,13 @@ width: 50%;
 							<div class="btn-toolbar btn-overwrite">
 								<form id="addForm">
 									<div class="input-group form-input">
-										<input type="text" id="sear_uAccount" name="uAccount" class="form-control input-sm" placeholder="名称">
+										<input type="text" id="actName" name="actName" class="form-control input-sm" placeholder="名称(不能输入特殊字符)">
 									</div>
 									<div class="input-group form-input">
-
-									<div class="dropdown">
-										  <button class="btn" type="button" data-toggle="dropdown">菜单按钮 <span class="caret"></span></button>
-										  <ul class="dropdown-menu">
-										    <li class="dropdown-submenu">
-										      <a href="###">打开</a>
-										      <ul class="dropdown-menu">
-										        <li><a href="###">运行</a></li>
-										        <li><a href="###">在终端中打开</a></li>
-										        <li><a href="###">在编辑器中打开</a></li>
-										      </ul>
-										    </li>
-										    <li class="dropdown-submenu">
-										      <a href="###">一组操作</a>
-										      <ul class="dropdown-menu">
-										        <li class="dropdown-submenu">
-										          <a href="###">修改</a>
-										          <ul class="dropdown-menu">
-										            <li><a href="###">修改标题</a></li>
-										            <li><a href="###">更新内容</a></li>
-										            <li><a href="###">转移</a></li>
-										          </ul>
-										        </li>
-										        <li class="dropdown-submenu">
-										          <a href="###">删除</a>
-										          <ul class="dropdown-menu">
-										            <li><a href="###">移动到回收站</a></li>
-										            <li><a href="###">直接删除</a></li>
-										          </ul>
-										        </li>
-										        <li><a href="###">撤销</a></li>
-										      </ul>
-										    </li>
-										    <li class="dropdown-submenu">
-										      <a href="###">另一组操作</a>
-										      <ul class="dropdown-menu">
-										        <li><a href="###">评审</a></li>
-										        <li><a href="###">计划</a></li>
-										        <li><a href="###">关闭</a></li>
-										      </ul>
-										    </li>
-										  </ul>
-										</div>
-
-
-
-
-
-
+									<div class="dropdown" id="add_dropdown">
+									 	  <input type="text" id="menuId" name="menuId" class="form-control hidden"  data-toggle="dropdown"  readonly>
+										  <input type="text" id="ubiety" name="ubiety" class="form-control input-sm"  data-toggle="dropdown" placeholder="选择" readonly>
+									</div>
 
 									</div>
 								</form>
@@ -138,7 +93,7 @@ width: 50%;
 									</button>
 								</div>
 								<div class="pull-right btn-group">
-									<button class="btn btn-mini btn-success" onclick="ActionList.reLoadData(1)">
+									<button class="btn btn-mini btn-success" onclick="ActionList.saveData()">
 										<i class="icon icon-search"></i>保存
 									</button>
 								</div>

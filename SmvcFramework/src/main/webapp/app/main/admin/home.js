@@ -8,6 +8,7 @@ $(function() {
 
 	InitMenu.init();
 	InitMenu.initMenu();
+	Home.init();
 
 });
 
@@ -104,7 +105,9 @@ var Home = function() {
 
 	return {
 		init : function() {
-
+			if(loginerAction){
+				PermissionBtn.init(loginerAction);
+			}
 		},
 		changeTheme : function(themestr) {
 			_changeTheme(themestr);
