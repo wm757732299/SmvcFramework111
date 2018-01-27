@@ -87,9 +87,11 @@ var UserList = function() {
 		flex : false,
 		colClass : 'text-center',
 		formatter : [ function uType (v,i) {
-			var html='<button name ="edituser" class="btn btn-mini"  onclick="javascript:UserList.editUserWindow(\''+i+'\')"><i class="icon icon-edit"></i>编辑</button>'
-					+'<button name ="deluser" class="btn btn-mini" onclick="javascript:UserList.delUser(\''+i+'\')"><i class="icon icon-trash" style="color:red">删除</i></button>';
-			return html;
+			var btn=[
+			         {name:'edituser',clazz:'btn btn-mini',onclick:'UserList.editUserWindow(\''+i+'\')',icon:'icon icon-edit',actName:'编辑'},
+			         {name:'deluser',clazz:'btn btn-mini ',onclick:'UserList.delUser(\''+i+'\')',icon:'icon icon-trash',bstyle:'margin-left: 3px;',istyle:'color:red;',actName:'删除'}
+			        ];
+			return PermissionBtn.build(btn,_menuId);
 		} , function uAccount (v){
 			if(v=='admin'){
 				return '';
@@ -97,6 +99,7 @@ var UserList = function() {
 		}]
 	} ];
 	
+	var _menuId=$(window.frameElement).data("menuid");
 	var _url = basePath + "/sysuser/user_list_data.wmctl";
 	var _param=null;
 	var _data = null;
