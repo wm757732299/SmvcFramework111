@@ -1,6 +1,7 @@
 package com.wm.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,9 +23,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wm.controller.base.BaseController;
+import com.wm.mapper.entity.SysAction;
 import com.wm.mapper.entity.SysUser;
 import com.wm.model.LoginUserDetails;
+import com.wm.service.SysActionService;
 import com.wm.service.SysMenuService;
 import com.wm.service.SysUserService;
 
@@ -47,6 +52,9 @@ public class MainController extends BaseController<SysUser> {
 	@Resource(type = SysUserService.class)
 	private SysUserService sysUserService;
 
+	@Resource(type = SysActionService.class)
+	private SysActionService sysActionService;
+	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -103,10 +111,25 @@ public class MainController extends BaseController<SysUser> {
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		LoginUserDetails user = getLoginUser();
+		 String loginerAction="";
+		 try {
+			 if(SysUser.SYS_ADMIN.equals(user.getId())){
+				// loginerAction="true";
+				 List<SysAction> action= sysActionService.queryLoginAct(user.getId());
+				 ObjectMapper mapper = new ObjectMapper();
+				 loginerAction = mapper.writeValueAsString(action);
+			 }else{
+				 List<SysAction> action= sysActionService.queryLoginAct(user.getId());
+				 ObjectMapper mapper = new ObjectMapper();
+				 loginerAction = mapper.writeValueAsString(action);
+			 }
+		} catch (JsonProcessingException e) {
+			LOGGER.info(e);
+		}
 		result.put("uAccount", user.getuAccount());
 		result.put("uName", user.getuName());
 		result.put("userId", user.getId());
-		
+		result.put("loginerAction", loginerAction);
 		return new ModelAndView("main/admin/home", result);
 	}
 

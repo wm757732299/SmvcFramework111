@@ -87,7 +87,7 @@ public abstract class BaseController<T> {
 		boolean flag = false;
 
 		LoginUserDetails ld = this.getLoginUser();
-		if (ld == null||ld.getId()==null)
+		if (ld == null || ld.getId() == null)
 			return flag;
 
 		if (ld.getId().equals(uId))
